@@ -36,6 +36,10 @@ module.exports = Latextools =
       type: 'boolean'
       default: true
       order: 6
+    inverseSync:
+      type: 'boolean'
+      default: true
+      order: 6.5
 
     commandCompletion:
       type: 'string'

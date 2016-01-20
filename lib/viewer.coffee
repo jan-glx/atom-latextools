@@ -7,12 +7,14 @@ module.exports =
 class Viewer extends LTool
 
 
-  _jumpWindows: (texfile, pdffile, row, col, forward_sync, keep_focus) ->
+  _jumpWindows: (texfile, pdffile, row, col, forward_sync, inverse_sync, keep_focus) ->
     sumatra_cmd = atom.config.get("latextools.win32.sumatra")
     sumatra_args = ["-reuse-instance"]
 
     if forward_sync
       sumatra_args = sumatra_args.concat(["-forward-search", '\"'+texfile+'\"', "#{row}"])
+    if inverse_sync
+      sumatra_args.push("-inverse-search \"atom.cmd \\\"%f:%l\\\"\"")
 
     sumatra_args.push('\"'+pdffile+'\"')
 
@@ -27,7 +29,7 @@ class Viewer extends LTool
 
 
 
-  _jumpDarwin: (texfile, pdffile, row, col, forward_sync, keep_focus) ->
+  _jumpDarwin: (texfile, pdffile, row, col, forward_sync, inverse_sync, keep_focus) ->
 
     if keep_focus
       skim_args = "-r -g"
@@ -50,7 +52,7 @@ class Viewer extends LTool
 
 
 
-  _jumpLinux: (texfile, pdffile, row, col, forward_sync, keep_focus) ->
+  _jumpLinux: (texfile, pdffile, row, col, forward_sync, inverse_sync, keep_focus) ->
 
     console.log("in _jumpLinux")
 
@@ -82,12 +84,13 @@ class Viewer extends LTool
     # TODO make modular, but for now...
 
     forward_sync = atom.config.get("latextools.forwardSync")
+    inverse_sync = atom.config.get("latextools.inverseSync")
     keep_focus = atom.config.get("latextools.keepFocus")
 
     switch process.platform
-      when "darwin" then @_jumpDarwin(texfile, pdffile, row, col, forward_sync, keep_focus)
-      when "win32" then @_jumpWindows(texfile, pdffile, row, col, forward_sync, keep_focus)
-      when "linux" then @_jumpLinux(texfile, pdffile, row, col, forward_sync, keep_focus)
+      when "darwin" then @_jumpDarwin(texfile, pdffile, row, col, forward_sync, inverse_sync, keep_focus)
+      when "win32" then @_jumpWindows(texfile, pdffile, row, col, forward_sync, inverse_sync, keep_focus)
+      when "linux" then @_jumpLinux(texfile, pdffile, row, col, forward_sync, inverse_sync, keep_focus)
       else
         alert("Sorry, no viewer for the current platform")
 
