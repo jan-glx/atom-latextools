@@ -304,7 +304,7 @@ module.exports.parse_tex_log = (data) ->
       debug("Reporting error in line: " + line)
       # We check for emergency stops here, too, because it may occur before the l.nn text
       if line.length>0 && line.indexOf("! Emergency stop.") >= 0
-        emergency_stop = True
+        emergency_stop = true
         debug("Emergency stop found")
         continue
       err_match = line_rx.exec(line)
@@ -626,7 +626,7 @@ module.exports.parse_tex_log = (data) ->
 
   # If there were parsing issues, output them to debug
   if parsing.length>0
-    warnings(["", -1, "(Log parsing issues. Disregard unless something else is wrong.)"])
+    warnings.push(["", -1, "(Log parsing issues. Disregard unless something else is wrong.)"])
     print_debug = true
     for l in parsing
       debug(l)
